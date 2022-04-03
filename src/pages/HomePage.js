@@ -24,6 +24,7 @@ function HomePage() {
       });
     }
     const FetchExpences = async () => {
+      debugger
       return await fetch(
         `https://expencetracker-b3897-default-rtdb.firebaseio.com/users/${localStorage.getItem('userId')}.json`
       );

@@ -26,6 +26,7 @@ const AuthForm = () => {
     event.preventDefault();
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
+    debugger
     if (email && password) {
       let url = "";
       if (isLogin) {
@@ -53,7 +54,7 @@ const AuthForm = () => {
             throw new Error("auth fail");
           }
         })
-        .then(async (data) => {
+        .then(async (user) => {
           const res = await fetch(
             `https://expencetracker-b3897-default-rtdb.firebaseio.com/users.json?orderBy="email"&equalTo="${email}"&print=pretty`
           );
@@ -93,8 +94,8 @@ const AuthForm = () => {
               userId = Object.keys(data)[0];
             }
             dispatch(ExpencesAction.addUserId(userId));
+            ctx.onLogin(email, user.idToken);
           });
-          ctx.onLogin(email, data.idToken);
         })
         .catch((error) => {
           alert(error);
