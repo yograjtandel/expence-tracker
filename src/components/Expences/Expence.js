@@ -11,7 +11,13 @@ import ExpenceFilter from './ExpenceFilter';
 function Expence(props) {
     const Expences = useSelector( state => state.expences.expences)
     const filterYear = useSelector( state => state.expences.filterYear)
-    const filteredExpense = Expences.filter((expense) => new Date(expense.date).toLocaleString('default', { year: 'numeric' }) === filterYear);
+    const filtercategory = useSelector( state => state.expences.filtercategory)
+    let filteredExpense;
+    if (filtercategory === "all") {
+         filteredExpense = Expences.filter((expense) => new Date(expense.date).toLocaleString('default', { year: 'numeric' }) === filterYear);
+    } else {
+        filteredExpense = Expences.filter((expense) => new Date(expense.date).toLocaleString('default', { year: 'numeric' }) === filterYear &&  expense.category === filtercategory);
+    }
     const list = filteredExpense.map((expence) => <ExpenceItem record={expence} key={expence.id} />);
 
     return <Card className="expenses">

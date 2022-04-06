@@ -14,10 +14,18 @@
     gap: 1rem;
     align-items: flex-end;
     flex-flow: column-reverse;
-    justify-content: flex-start;
+    justify-content: inherit;
     flex: 1;
 }
-
+.expense-item__description .detail {
+    flex-direction: column;
+    display: flex;
+    padding-left: 18px;
+    font-size: 20px;
+    color: #FFFFFF;
+}
+/* 
+ */
 .expense-item h2 {
     color: #3a3a3a;
     font-size: 1rem;
@@ -39,7 +47,7 @@
     .expense-item__description {
         flex-direction: row;
         align-items: center;
-        justify-content: flex-start;
+        justify-content: inherit;
         flex: 1;
     }
 

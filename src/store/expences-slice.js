@@ -1,7 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
+import storage from "../firebase";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { v4 as uuid } from 'uuid';
 
 const initialState = {
   filterYear: "2022",
+  filtercategory: "all",
   userID: "",
   expences: [],
 };
@@ -14,20 +18,33 @@ const ExpencesSlice = createSlice({
       state.expences = [...state.expences, ...action.payload];
     },
     filter(state, action) {
-      state.filterYear = action.payload;
+      state.filterYear = action.payload.year;
+      state.filtercategory = action.payload.category;
     },
     addUserId(state, action) {
       state.userID = action.payload;
-      localStorage.setItem('userId', state.userID);
-    }
+      localStorage.setItem("userId", state.userID);
+    },
   },
 });
 
 export const AddExpence = (expence) => {
   return async (dispatch, getState) => {
     let userId = getState().expences.userID;
-    debugger
     const add_expence = async () => {
+      const file = expence.bill;
+      const storageRef = ref(storage, uuid());
+      await uploadBytes(storageRef, file).then((response) => {
+        debugger;
+        return getDownloadURL(ref(storage, response.metadata.fullPath)).then(
+          (url) => {
+            return url;
+          }
+        );
+      }).then ((url) => {
+        expence['billURL'] = url;
+      });
+
       const expenceRes = await fetch(
         `https://expencetracker-b3897-default-rtdb.firebaseio.com/users/${userId}.json`,
         {
@@ -40,21 +57,19 @@ export const AddExpence = (expence) => {
       );
 
       if (expenceRes.ok) {
-        return expenceRes.json()
+        return expenceRes.json();
       } else {
         throw new Error("not able to add new expence");
       }
     };
 
-    if( userId ) {
+    if (userId) {
       try {
         const res = add_expence();
-        res.then(data=>{
-          debugger
-          expence['id'] = data['name'];
+        res.then((data) => {
+          expence["id"] = data["name"];
           dispatch(ExpencesAction.updateExpence([expence]));
-        })
-        debugger
+        });
       } catch (error) {
         alert(error);
       }

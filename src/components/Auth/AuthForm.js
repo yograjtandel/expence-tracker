@@ -26,7 +26,7 @@ const AuthForm = () => {
     event.preventDefault();
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
-    debugger
+
     if (email && password) {
       let url = "";
       if (isLogin) {
@@ -110,10 +110,12 @@ const AuthForm = () => {
         <div className={classes.control}>
           <label htmlFor="email">Your Email</label>
           <input type="email" id="email" ref={emailRef} required />
+          {/* <input type="text" data-nusa-concept-name="email" id="email" ref={emailRef} required /> */}
         </div>
         <div className={classes.control}>
           <label htmlFor="password">Your Password</label>
           <input type="password" id="password" ref={passwordRef} required />
+          {/* <input type="text" data-nusa-concept-name="password" id="password" ref={passwordRef} required /> */}
         </div>
         <div className={classes.actions}>
           <button>{isLogin ? "Login" : "Create Account"}</button>

@@ -36,7 +36,12 @@
 }
 
 
-
+.new-expense__control select {
+    font: inherit;
+    padding: 0.5rem 3rem;
+    font-weight: bold;
+    border-radius: 6px;
+}
 
 
 .new-expense__controls {
