@@ -36,7 +36,6 @@ function NewExpense(props) {
 
   const uploadFile = (event) => {
     if (event.type === "submit") {
-        debugger
       event.target.value = "";
       return;
     }

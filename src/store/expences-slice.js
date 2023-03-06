@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import storage from "../firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { v4 as uuid } from 'uuid';
+import { v4 as uuid } from "uuid";
 
 const initialState = {
   filterYear: "2022",
@@ -13,9 +13,11 @@ const ExpencesSlice = createSlice({
   name: "Expences",
   initialState,
   reducers: {
-    updateExpence(state, action) {
-      // debugger
+    addExpence(state, action) {
       state.expences = [...state.expences, ...action.payload];
+    },
+    updateExpence(state, action) {
+      state.expences = [...action.payload];
     },
     filter(state, action) {
       state.filterYear = action.payload.year;
@@ -34,16 +36,17 @@ export const AddExpence = (expence) => {
     const add_expence = async () => {
       const file = expence.bill;
       const storageRef = ref(storage, uuid());
-      await uploadBytes(storageRef, file).then((response) => {
-        debugger;
-        return getDownloadURL(ref(storage, response.metadata.fullPath)).then(
-          (url) => {
-            return url;
-          }
-        );
-      }).then ((url) => {
-        expence['billURL'] = url;
-      });
+      await uploadBytes(storageRef, file)
+        .then((response) => {
+          return getDownloadURL(ref(storage, response.metadata.fullPath)).then(
+            (url) => {
+              return url;
+            }
+          );
+        })
+        .then((url) => {
+          expence["billURL"] = url;
+        });
 
       const expenceRes = await fetch(
         `https://expencetracker-b3897-default-rtdb.firebaseio.com/users/${userId}.json`,
@@ -68,7 +71,7 @@ export const AddExpence = (expence) => {
         const res = add_expence();
         res.then((data) => {
           expence["id"] = data["name"];
-          dispatch(ExpencesAction.updateExpence([expence]));
+          dispatch(ExpencesAction.addExpence([expence]));
         });
       } catch (error) {
         alert(error);
